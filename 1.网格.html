@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    canvas {
+      border:1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>折线图</h1>
+  <canvas id="canvas" width="500" height="200"></canvas>
+
+<script>
+
+  let canvas = document.querySelector('#canvas')
+  let ctx = canvas.getContext('2d')
+  let canvasWidth = ctx.canvas.width
+  let canvasHeight = ctx.canvas.height
+  let spaceSzie = 20
+
+  let xTotal = Math.floor(canvasHeight/spaceSzie)
+  let yTotal = Math.floor(canvasWidth/spaceSzie)
+  ctx.strokeStyle = '#666'
+  for (let i= 0;i<xTotal;i++){
+    ctx.beginPath()
+    ctx.moveTo(0,spaceSzie*i-0.5)
+    ctx.lineTo(canvasWidth,spaceSzie*i-0.5)
+    ctx.stroke()
+  }
+  for (let j= 0;j<yTotal;j++){
+    ctx.beginPath()
+    ctx.moveTo(spaceSzie*j-0.5,0)
+    ctx.lineTo(spaceSzie*j-0.5,canvasHeight)
+    ctx.stroke()
+  }
+  let dotArr = [
+    {x:10,y:50},
+    {x:62,y:60},
+    {x:91,y:33},
+    {x:155,y:90},
+    {x:260,y:50},
+    {x:307,y:40},
+    {x:385,y:20},
+  ]
+  let dotSize = 6
+  // for (let d=0;d<dotArr.length;d++) {
+  //   ctx.beginPath()
+  //   ctx.arc(dotArr[d].x,dotArr[d].y,dotSize/2,50,0,Math.PI*2)
+  //   ctx.fillStyle="#333"
+  //   ctx.strokeStyle="#ff3333"
+  //   ctx.fill();
+  //   ctx.beginPath()
+  //   if(!dotArr[d+1].x||!dotArr[d+1].y) break
+  //
+  //   ctx.moveTo(dotArr[d].x+dotSize/2,dotArr[d].y)
+  //   ctx.lineTo(dotArr[d+1].x,dotArr[d+1].y)
+  //   console.log('aaa',dotArr[d+1].x,dotArr[d+1].y)
+  //   ctx.stroke()
+  //
+  // }
+  dotArr.forEach((item,d)=>{
+    ctx.beginPath()
+    ctx.arc(item.x,item.y,dotSize/2,50,0,Math.PI*2)
+    ctx.fillStyle="#333"
+    ctx.strokeStyle="#ff3333"
+    ctx.fill();
+    ctx.beginPath()
+    if(!dotArr[d+1]) return
+
+    ctx.moveTo(item.x+dotSize/2,item.y)
+    ctx.lineTo(dotArr[d+1].x,dotArr[d+1].y)
+    console.log('aaa',dotArr[d+1].x,dotArr[d+1].y)
+    ctx.stroke()
+  })
+
+</script>
+</body>
+</html>
