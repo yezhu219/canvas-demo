@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas></canvas>
+
+  <script>
+    // class Ball {
+    //   constructor(option = {}) {
+    //     let defaultOption = {
+    //       width: window.innerWidth,
+    //       height: window.innerHeight,
+    //       xStep: 10,
+    //       yStep: 10,
+    //       maxRadius: 10,
+    //       minRadius: 4,
+    //       color: this.getRandomColor()
+    //     }
+    //     this.option = Object.assign(defaultOption, option)
+    //     this.canvas = document.querySelector('canvas')
+    //     this.ctx = this.canvas.getContext('2d')
+    //     this.canvas.height = this.option.height
+    //     this.canvas.width = this.option.width
+    //     this.yStep = this.option.yStep
+    //     this.xStep = this.option.xStep
+    //     this.radius = this.getRadom(this.option.minRadius, this.option.maxRadius)
+    //     this.maxX = this.option.width - this.radius
+    //     this.maxY = this.option.height - this.radius
+    //     this.move()
+    //   }
+
+    //   drowBall(x, y, radius, color) {
+    //     this.ctx.beginPath()
+    //     this.ctx.arc(x, y, radius, 0 * Math.PI, 2 * Math.PI)
+    //     this.ctx.fillStyle = color
+    //     this.ctx.fill()
+    //   }
+    //   // 生成指定范围的随机数
+    //   getRadom(min, max) {
+    //     return Math.random() * (max - min) + min;
+    //   }
+    //   // 生成随机颜色
+    //   getRandomColor() {
+    //     return "#" + Math.random().toString(16).slice(-6)
+    //   }
+
+    //   move() {
+    //     let x = this.radius + 10
+    //     let y = this.radius + 10
+    //     if (x >= this.maxX || x <= this.radius) {
+    //       this.xStep = -this.xStep
+    //     }
+    //     if (y >= this.maxY || y <= this.radius) {
+    //       this.yStep = -this.yStep
+    //     }
+    //     y += this.yStep
+    //     x += this.xStep
+    //     console.log(x)
+    //     this.drowBall(x, y, this.radius, this.option.color)
+    //   }
+
+    // }
+    class Ball {
+      constructor(ctx, option) {
+        // let defaultOption = {
+        //   radius: this.getRandomColor(),
+        //   xStep: 1,
+        //   yStep: 1,
+        //   width: window.innerWidth,
+        //   height: window.innerHeight,
+        //   minRadius: 4,
+        //   maxRadius: 10
+        // }
+        // this.option = Object.assign(defaultOption, option)
+        this.radius = option.radius
+        this.xStep = option.xStep
+        this.yStep = option.yStep
+        this.maxX = option.width - this.radius
+        this.maxY = option.height - this.radius
+        this.x = option.x
+        this.y = option.y
+        this.color = option.color
+        this.mouse = option.mouse
+        this.ctx = ctx
+        this.minradius = option.radius
+        this.max = 40
+
+      }
+      drowBall(x, y, radius, color) {
+        this.ctx.beginPath()
+        this.ctx.arc(x, y, radius, 0 * Math.PI, 2 * Math.PI)
+        this.ctx.fillStyle = color
+        this.ctx.fill()
+      }
+      move() {
+
+        if (this.x >= this.maxX || this.x <= this.radius) {
+          this.xStep = -this.xStep
+        }
+        if (this.y >= this.maxY || this.y <= this.radius) {
+          this.yStep = -this.yStep
+        }
+        this.y += this.yStep
+        this.x += this.xStep
+        if (Math.abs(this.x - this.mouse.x) < 100 && Math.abs(this.y - this.mouse.y) < 100) {
+          if (this.radius < this.max) {
+            this.radius += 4
+          }
+        } else {
+          if (this.radius > this.minradius) {
+            this.radius -= 4
+          }
+        }
+
+        this.drowBall(this.x, this.y, this.radius, this.color)
+      }
+    }
+    // 生成指定范围的随机数
+    function getRandom(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+    // 生成随机颜色
+    function getRandomColor() {
+      return "#" + Math.random().toString(16).slice(-6)
+    }
+
+    let mouse = {
+      x: 0,
+      y: 0
+    }
+    window.addEventListener('mousemove', function (e) {
+      mouse.x = e.pageX,
+        mouse.y = e.pageY
+    })
+
+    let canvas = document.querySelector('canvas')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+    let ctx = canvas.getContext('2d')
+
+
+
+    let balls = []
+    for (let i = 0; i < 250; i++) {
+      let option = {
+        radius: getRandom(4, 10),
+        color: getRandomColor(),
+        xStep: (Math.random() - 0.5) * 2,
+        yStep: (Math.random() - 0.5) * 2,
+        width: window.innerWidth,
+        height: window.innerHeight,
+        mouse: mouse
+      }
+      option.x = getRandom(option.radius, option.width - option.radius)
+      option.y = getRandom(option.radius, option.height - option.radius)
+      balls.push(new Ball(ctx, option))
+    }
+
+    function animate() {
+      requestAnimationFrame(animate)
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      balls.forEach(item => item.move())
+    }
+    animate()
+  </script>
+
+</body>
+
+</html>
